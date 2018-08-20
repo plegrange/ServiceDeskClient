@@ -21,7 +21,7 @@ public class Controller {
         feedbackLabel = (Label) primaryStage.getScene().lookup("#feedbackLbl");
         connectButton = (Button) primaryStage.getScene().lookup("#connectBtn");
         disconnectButton = (Button) primaryStage.getScene().lookup("#disconnectBtn");
-        client = new Client(feedbackLabel);
+        client = new Client(this);
         connectButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -49,5 +49,9 @@ public class Controller {
             }
         });
 
+    }
+
+    public void setFeedback(String feedback){
+        this.feedbackLabel.setText(feedback);
     }
 }

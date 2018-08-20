@@ -20,24 +20,28 @@ public class Client extends Observable implements Runnable {
     private boolean connected;
     private int port = 5555; //default port
     private String hostName = "localhost";
-    private Label feedbackLabel;
+    //private Label feedbackLabel;
+    private Controller controller;
     private StringProperty feedback;
-    public Client(Label feedbackLabel) {
+
+    public Client(Controller controller) {
         connected = false;
-        feedback = new SimpleStringProperty();
-        feedbackLabel.textProperty().bindBidirectional(feedback);
+        this.controller = controller;
+        //feedback = new SimpleStringProperty();
+        //feedbackLabel.textProperty().bindBidirectional(feedback);
     }
 
     public void connect(String hostName, int port) throws IOException {
         if (!connected) {
             this.hostName = hostName;
             this.port = port;
-            this.feedbackLabel = feedbackLabel;
+            // this.feedbackLabel = feedbackLabel;
             socket = new Socket(hostName, port);
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             pw = new PrintWriter(socket.getOutputStream(), true);
             connected = true;
-           // feedbackLabel.setText("Connected to server");
+            // feedbackLabel.setText("Connected to server");
+
             Thread t = new Thread(this);
             t.start();
         }
@@ -67,7 +71,8 @@ public class Client extends Observable implements Runnable {
         try {
             while (connected && (msg = br.readLine()) != null) {
                 System.out.println("Server: " + msg);
-                feedback.setValue("Server: "+msg);
+                //feedback.setValue("Server: "+msg);
+                controller.setFeedback("Server: " + msg);
                 this.setChanged();
                 this.notifyObservers(msg);
             }
@@ -82,19 +87,19 @@ public class Client extends Observable implements Runnable {
         return connected;
     }
 
-    public int getPort(){
+    public int getPort() {
         return port;
     }
 
-    public void setPort(int port){
+    public void setPort(int port) {
         this.port = port;
     }
 
-    public String getHostName(){
+    public String getHostName() {
         return hostName;
     }
 
-    public void setHostName(String hostName){
+    public void setHostName(String hostName) {
         this.hostName = hostName;
     }
 }
